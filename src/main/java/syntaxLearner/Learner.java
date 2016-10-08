@@ -33,12 +33,13 @@ public class Learner {
 	protected short[] parents;    //is very large
 	private int iterationCounter = 0;
 	private Recorder rec;
-
+	
 	//helper iterable set that saves time when calculating distances
 	private Set<ClusterContext> clusterContexts;
 	//Iterator that keeps track of word heirarchy
 	Iterator<Integer> backupIterator;
-
+	MultiRun mr;
+	
 	public Learner(int clusters, int threshold, double epsilon){
 		IDENTITY_EPSILON = (epsilon<=0 ? 0.001 : epsilon);
 		NUMBER_OF_CLUSTERS = (clusters<=1 ? 50 : clusters);
@@ -75,7 +76,7 @@ public class Learner {
 		Iterator<Integer> iter = wordHeirarchy.iterator();
 		backupIterator = wordHeirarchy.iterator();
 
-		for (int i=0;i<NUMBER_OF_CLUSTERS;i++){
+/*		for (int i=0;i<NUMBER_OF_CLUSTERS;i++){
 			//advance in unison, so backupIterator will remember the next word in the hierarchy
 			int l = 	iter.next();
 			backupIterator.next();
@@ -93,7 +94,9 @@ public class Learner {
 				i--;
 				continue;
 			}
-		}
+		} */
+		mr = new MultiRun(NUMBER_OF_CLUSTERS, iter, backupIterator, vocab, clusters, this);
+		
 		while (iter.hasNext()){
 			int l = iter.next();
 			groundCluster.add(l);
